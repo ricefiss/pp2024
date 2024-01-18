@@ -19,40 +19,47 @@ def inputCourse(args):
     }
     return course
 
+#Input mark info into the students dict
 def inputMark(students, courses):
     stuId = input("Enter the student id to add mark: ")
-    if stuId not in students:
-        print("The student does not exist!")
+    
+    while stuId not in students:           #check find student
+        stuId = input("The student does not exist! Enter again ")
     else:
         couId = input("Enter the course id to add mark: ")
-        if couId not in courses:
-            print("The course does not exist!")
+        while couId not in courses:            #check find course
+            couId = input(("The course does not exist! Enter again"))           
         else:
             mark = input("Enter the mark: ")
-            while mark.isnumeric() == False:
+            while mark.isnumeric() == False:            #check valid mark
                 mark = input("Invalid mark! Enter the mark again: ")
             if "marks" not in students[stuId]:
-                students[stuId]['marks'] = {}
-            if couId not in students[stuId]['marks']:
-                students[stuId]['marks'][couId] = []
-            students[stuId]['marks'][couId].append(int(mark))
+                students[stuId]["marks"] = {}
+            if couId not in students[stuId]["marks"]:
+                students[stuId]["marks"][couId] = {}
+            students[stuId]["marks"][couId].append(int(mark))
+
+#show student info and their marks of each course
 def listStudents(students):
-    if len(students) == 0:
+    if len(students) == 0:          #check students dict
         print("There aren't any students yet")
         return
     print("Here is the students list: ")
     print("-------------------------------------------------")
-    for stuId in students.keys():
-        print(f"{stuId} - {students[stuId]['name']} - {students[stuId]['dob']}")
-        if "marks" in students[stuId].keys() and len(students[stuId]['marks']) > 0:
-            for couId in students[stuId]['marks'].keys():
-                print(f"{couId}: {students[stuId]['marks'][couId]}")
-            else:
-                print(f"{students[stuId]['name']} has no mark")
+    for stuId, stuInfo in students.items():
+        print(f"{stuId} - {stuInfo['name']} - {stuInfo['dob']}")
+    
+        if "marks" in stuInfo and len(stuInfo["marks"]) > 0:
+            for couId, marks in stuInfo["marks"].items():
+                print(f"{couId}: {marks}")
+        else:
+            print(f"{stuInfo['name']} has no mark")
+    
         print("-------------------------------------------------")
 
+#show all courses
 def listCourses(courses):
-    if len(courses) == 0:
+    if len(courses) == 0:           #check courses dict
         print("There aren't any courses yet")
         return
     print("Here is the course list: ")
@@ -65,8 +72,23 @@ def main():
     stuNum = 0
     couNum = 0
     # Initialize the dict of students and courses
-    students = {}
-    courses = {}
+    students = {
+        "22BI13437" : {
+            "name" : "Trung",
+            "dob" : "27-02-2004"
+        },
+        "22bi13857" : {
+            "name" : "Vy",
+            "dob" : "26-12-2003",
+            "marks" : {
+                "ICT001" : 20
+            }
+        }
+    }
+    courses = {
+        "ICT001" : "ADS",
+        "ICT002" : "OOP"
+    }
     
     while(True):
         print("""
@@ -79,7 +101,7 @@ def main():
         5. List courses.
         """)
         option = input("Your choice: ")
-        while option.isnumeric() == False:
+        while option.isnumeric() == False:          #check input option
             option = input("Invalid choice! Please enter your choice again: ")
         else:
             option = int(option)
@@ -89,7 +111,7 @@ def main():
 
         elif option == 1: 
             stuNum = inputNumOf("student")
-            while stuNum.isnumeric() == False:
+            while stuNum.isnumeric() == False:          #check input stuNum 
                 stuNum = input("Invalid number of student(s). Enter again: ")
             else:
                 print("There are " + stuNum + " students(s) ready to be added")
@@ -106,7 +128,7 @@ def main():
 
         elif option == 2:
             couNum = inputNumOf("course")
-            if couNum.isnumeric() == False:
+            if couNum.isnumeric() == False:         #check input couNum
                 print("Invalid number of course(s)")
             else:
                 print("There are " +couNum + " course(s) ready to be added")
@@ -117,19 +139,21 @@ def main():
                           """)
                     id = input("Enter the course id: ") 
                     name = input("Enter the course name: ")                                                                                                                             
-                    courses.update(inputInfo([id, name]))
+                    courses.update(inputCourse([id, name]))
                     couNum -= 1
 
         elif option == 3:
-            inputMark(students,courses)
+            if len(students) == 0:          #check students dict
+               print("There aren't any students yet")
+            elif len(courses) == 0:         #check courses dict
+                print("There aren't any courses yet")
+            else:
+                inputMark(students,courses)
 
         elif option == 4:
             listStudents(students)
     
         elif option == 5:
             listCourses(courses)
-
-        else:
-            option = input("Invalid choice! Please enter your choice again: ")
 
 main()
