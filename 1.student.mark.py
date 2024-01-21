@@ -21,14 +21,14 @@ def inputCourse(args):
 
 #Input mark info into the students dict
 def inputMark(students, courses):
-    stuId = input("Enter the student id to add mark: ")
+    stuId = input("Enter the student's id to add mark: ")
     
     while stuId not in students:           #check find student
-        stuId = input("The student does not exist! Enter again ")
+        stuId = input("The student does not exist! Enter again: ")
     else:
-        couId = input("Enter the course id to add mark: ")
+        couId = input("Enter the course's id to add mark: ")
         while couId not in courses:            #check find course
-            couId = input(("The course does not exist! Enter again"))           
+            couId = input(("The course does not exist! Enter again: "))           
         else:
             mark = input("Enter the mark: ")
             while mark.isnumeric() == False:            #check valid mark
@@ -36,7 +36,7 @@ def inputMark(students, courses):
             if "marks" not in students[stuId]:
                 students[stuId]["marks"] = {}
             if couId not in students[stuId]["marks"]:
-                students[stuId]["marks"][couId] = {}
+                students[stuId]["marks"][couId] = []
             students[stuId]["marks"][couId].append(int(mark))
 
 #show student info and their marks of each course
@@ -77,11 +77,11 @@ def main():
             "name" : "Trung",
             "dob" : "27-02-2004"
         },
-        "22bi13857" : {
+        "22BI13857" : {
             "name" : "Vy",
             "dob" : "26-12-2003",
             "marks" : {
-                "ICT001" : 20
+                "ICT001" : [20]
             }
         }
     }
@@ -128,8 +128,8 @@ def main():
 
         elif option == 2:
             couNum = inputNumOf("course")
-            if couNum.isnumeric() == False:         #check input couNum
-                print("Invalid number of course(s)")
+            while couNum.isnumeric() == False:         #check input couNum
+                couNum = input("Invalid number of course(s). Enter again: ")
             else:
                 print("There are " +couNum + " course(s) ready to be added")
                 couNum = int (couNum)
@@ -156,4 +156,5 @@ def main():
         elif option == 5:
             listCourses(courses)
 
-main()
+if __name__ == "__main__":
+    main()
